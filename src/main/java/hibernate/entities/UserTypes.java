@@ -1,4 +1,4 @@
-package pojo.entities;
+package hibernate.entities;
 
 import org.hibernate.annotations.GenericGenerator;
 
