@@ -1,22 +1,27 @@
-import tools.MyFileReader;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.util.Properties;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import tools.MyProperties;
 
 public class test {
-    public static void main(String[] args) throws IOException {
-        MyFileReader file = new MyFileReader("src/main/java/resources/hibernate.properties");
-        Properties prop = new Properties();
+    public static void main(String[] args) {
+        MyProperties dbProp = new MyProperties();
+        Configuration dbConfig = new Configuration();
+        SessionFactory sf;
 
-        try {
-            br = file.read();
-            prop.load(br);
-        } catch (Exception e) {
-            e.printStackTrace();
+        dbProp.setMyProperties("src/main/java/resources/hibernate.properties");
+        dbConfig.addProperties(dbProp.getDbConProp());
+        sf = dbConfig.buildSessionFactory();
+        Session session = sf.openSession();
+
+        if(session.isOpen()){
+            System.out.println("Session is open.");
+            System.out.println(session.getProperties().toString());
+            sf.close();
         }
 
-        System.out.println(prop.toString());
     }
+
+
 }

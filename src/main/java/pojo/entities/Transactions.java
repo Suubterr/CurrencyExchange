@@ -1,9 +1,8 @@
 package pojo.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "transactions")
@@ -11,12 +10,15 @@ public class Transactions {
 
     @Id
     @Column(name = "tr_id")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native", strategy = "native")
     private int trId;
 
     @Column(name = "currency_id")
     private int currencyId;
 
     @Column(name = "tr_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private String trDate;
 
     @Column(name = "amount")
@@ -34,9 +36,7 @@ public class Transactions {
     @Column(name = "info")
     private String info;
 
-    public int getTrId() {
-        return trId;
-    }
+    public int getTrId() { return trId; }
 
     public void setTrId(int trId) {
         this.trId = trId;

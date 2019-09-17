@@ -1,9 +1,8 @@
 package pojo.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "currency")
@@ -11,6 +10,8 @@ public class Currency {
 
     @Id
     @Column(name = "currency_id")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native", strategy = "native")
     private int currentyId;
 
     @Column(name = "short_name")

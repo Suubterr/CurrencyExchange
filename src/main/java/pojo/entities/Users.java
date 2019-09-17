@@ -1,9 +1,8 @@
 package pojo.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 
 @Entity
 @Table
@@ -11,6 +10,8 @@ public class Users {
 
     @Id
     @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native", strategy = "native")
     private int userId;
 
     @Column(name = "login")
