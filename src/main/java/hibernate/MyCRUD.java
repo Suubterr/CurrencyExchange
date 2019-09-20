@@ -7,24 +7,24 @@ import org.hibernate.SessionFactory;
 import javax.persistence.Persistence;
 
 public class MyCRUD {
-    public void performCRUDOperation(String operation, SessionFactory sessionFactory, Persistence object) {
+    public void performCRUDOperation(int operation, SessionFactory sessionFactory, Persistence object) {
 
 
         Session session = null;
         try {
             session = sessionFactory.openSession();
 
-            switch (operation.toLowerCase()) {
-                case "create":
+            switch (operation) {
+                case 1: // create:
                     System.out.println(operation);
                     break;
-                case "read":
+                case 2: //read
                     System.out.println(operation);
                     break;
-                case "update":
+                case 3: //update
                     System.out.println(operation);
                     break;
-                case "delete":
+                case 4: //delete
                     System.out.println(operation);
                     break;
                 default:
