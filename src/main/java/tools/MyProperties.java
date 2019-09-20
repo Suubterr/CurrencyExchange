@@ -2,7 +2,7 @@ package tools;
 
 import java.util.Properties;
 
-public class MyProperties {
+public class MyProperties extends Properties{
     private Properties myProperties = new Properties();
 
     public void setMyProperties(String path) {
