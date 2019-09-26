@@ -3,6 +3,8 @@ package hibernate.entities;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.sql.Time;
+import java.util.Date;
 
 @Entity
 @Table(name = "transactions")
@@ -19,7 +21,7 @@ public class Transactions {
 
     @Column(name = "tr_date")
     @Temporal(TemporalType.TIMESTAMP)
-    private String trDate;
+    private Date trDate;
 
     @Column(name = "amount")
     private float amount;
@@ -50,11 +52,11 @@ public class Transactions {
         this.currencyId = currencyId;
     }
 
-    public String getTrDate() {
+    public Date getTrDate() {
         return trDate;
     }
 
-    public void setTrDate(String trDate) {
+    public void setTrDate(Date trDate) {
         this.trDate = trDate;
     }
 

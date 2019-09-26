@@ -3,10 +3,11 @@ package hibernate.entities;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "user_types")
-public class UserTypes {
+public class UserType implements Serializable {
 
     @Id
     @Column(name = "usrtype_id")
@@ -31,5 +32,13 @@ public class UserTypes {
 
     public void setTypeName(String typeName) {
         this.typeName = typeName;
+    }
+
+    @Override
+    public String toString() {
+        return "UserType{" +
+                "usrTypeId=" + usrTypeId +
+                ", typeName='" + typeName + '\'' +
+                '}';
     }
 }

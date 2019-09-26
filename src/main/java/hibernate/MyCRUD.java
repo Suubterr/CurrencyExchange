@@ -1,30 +1,46 @@
 package hibernate;
 
+import hibernate.entities.Currency;
+import hibernate.entities.Transactions;
+import hibernate.entities.UserType;
+import hibernate.entities.Users;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import javax.persistence.Persistence;
+import java.io.Serializable;
 
 public class MyCRUD {
-
-    public final String PROPERTIES_FILE_PATH = "src/main/java/hibernate/resources/hibernate.properties";
-
     private static SessionFactory sf;
     private static Session session;
 
-
-    public void performCRUDOperation(int operation, Persistence object, Session session) {
-
+    private static void performCRUDOperation(int operation, Object object) {
 
         try {
-            sf = new Configuration().configure().buildSessionFactory();
+            sf = new Configuration()
+                    .addPackage("java.hibernate.entities")
+                    .addAnnotatedClass(Currency.class)
+                    .addAnnotatedClass(Users.class)
+                    .addAnnotatedClass(UserType.class)
+                    .addAnnotatedClass(Transactions.class)
+                    .configure()
+                    .buildSessionFactory();
             session = sf.openSession();
+            session.beginTransaction();
 
             switch (operation) {
                 case 1: // create:
-                    System.out.println(operation + " - create");
+                    System.out.println(operation + " - create " + object.toString());
+                    try{
+                        session.save(object);
+                    }catch (HibernateException e) {
+                        if(session.getTransaction() != null){
+                            session.getTransaction().rollback();
+                        }
+                        throw new HibernateException("Problem during insert --> " + object.getClass() + " --> " + e.getMessage());
+                    }
+
                     break;
                 case 2: //read
                     System.out.println(operation + " - read");
@@ -36,18 +52,30 @@ public class MyCRUD {
                     System.out.println(operation + " - delete");
                     break;
                 default:
-                    System.out.println(MyCRUD.class.getName() + ".performCRUDOperation() --> \""+ operation +"\" is not a valid CRUD operation.");
+                    System.out.println(MyCRUD.class.getName() + ".performCRUDOperation() --> \"" + operation + "\" is not a valid CRUD operation.");
             }
         } catch (HibernateException e) {
             e.printStackTrace();
-        }  finally {
-            if(session.isOpen()){
+        } finally {
+            if (session.isOpen()) {
                 session.close();
             }
         }
-
-
     }
 
+    public static void create(Object object) {
+        performCRUDOperation(1, object);
+    }
 
+    public static void read(Object object) {
+        performCRUDOperation(2, object);
+    }
+
+    public static void update(Object object) {
+        performCRUDOperation(3,object);
+    }
+
+    public static void delete(Object object) {
+        performCRUDOperation(4,object);
+    }
 }
