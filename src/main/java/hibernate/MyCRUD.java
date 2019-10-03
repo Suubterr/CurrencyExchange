@@ -14,8 +14,12 @@ import java.io.Serializable;
 public class MyCRUD {
     private static SessionFactory sf;
     private static Session session;
+    private static String operationName;
+    private static String info;
 
     private static void performCRUDOperation(int operation, Object object) {
+
+        info = "Performing \"" + operationName + "\" on object " + object.toString();
 
         try {
             sf = new Configuration()
@@ -31,19 +35,14 @@ public class MyCRUD {
 
             switch (operation) {
                 case 1: // create:
-                    System.out.println(operation + " - create " + object.toString());
-                    try{
-                        session.save(object);
-                    }catch (HibernateException e) {
-                        if(session.getTransaction() != null){
-                            session.getTransaction().rollback();
-                        }
-                        throw new HibernateException("Problem during insert --> " + object.getClass() + " --> " + e.getMessage());
-                    }
-
+                    operationName = "create";
+                    session.save(object);
+                    System.out.println(info);
                     break;
                 case 2: //read
-                    System.out.println(operation + " - read");
+                    operationName = "read";
+                    session.find(object.getClass(), object);
+                    System.out.println(info);
                     break;
                 case 3: //update
                     System.out.println(operation + " - update");
@@ -54,7 +53,10 @@ public class MyCRUD {
                 default:
                     System.out.println(MyCRUD.class.getName() + ".performCRUDOperation() --> \"" + operation + "\" is not a valid CRUD operation.");
             }
-        } catch (HibernateException e) {
+        } catch (Exception e) {
+            if (session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
             e.printStackTrace();
         } finally {
             if (session.isOpen()) {
@@ -72,10 +74,10 @@ public class MyCRUD {
     }
 
     public static void update(Object object) {
-        performCRUDOperation(3,object);
+        performCRUDOperation(3, object);
     }
 
     public static void delete(Object object) {
-        performCRUDOperation(4,object);
+        performCRUDOperation(4, object);
     }
 }
