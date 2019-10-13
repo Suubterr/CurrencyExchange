@@ -4,12 +4,15 @@ import hibernate.entities.Currency;
 import hibernate.entities.Transactions;
 import hibernate.entities.UserType;
 import hibernate.entities.Users;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import javax.persistence.Query;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 
 public class MyCRUD {
     private static SessionFactory sf;
@@ -17,33 +20,28 @@ public class MyCRUD {
     private static String operationName;
     private static String info;
 
-    private static void performCRUDOperation(int operation, Object object) {
+    private static Object performCRUDOperation(int operation, Object object) {
 
         info = "Performing \"" + operationName + "\" on object " + object.toString();
 
         try {
-            sf = new Configuration()
-                    .addPackage("java.hibernate.entities")
-                    .addAnnotatedClass(Currency.class)
-                    .addAnnotatedClass(Users.class)
-                    .addAnnotatedClass(UserType.class)
-                    .addAnnotatedClass(Transactions.class)
-                    .configure()
-                    .buildSessionFactory();
+            sf = getSf();
             session = sf.openSession();
             session.beginTransaction();
 
             switch (operation) {
                 case 1: // create:
-                    operationName = "create";
+                    operationName = "insert";
                     session.save(object);
                     System.out.println(info);
-                    break;
+                    return object;
                 case 2: //read
-                    operationName = "read";
-                    session.find(object.getClass(), object);
+                    operationName = "select";
                     System.out.println(info);
-                    break;
+                    String query = getQuery(operation, object);
+
+                    object = session.find(object.getClass(), 1);
+                    return object;
                 case 3: //update
                     System.out.println(operation + " - update");
                     break;
@@ -63,21 +61,45 @@ public class MyCRUD {
                 session.close();
             }
         }
+        return null;
     }
 
-    public static void create(Object object) {
-        performCRUDOperation(1, object);
+    private static String getQuery(int operation, Object object) {
+        StringBuffer query = new StringBuffer();
+
+        query.append(operationName);
+        query.append(" from " + Object.class.getSimpleName());
+
+        Field[] fields = Object.class.getFields();
+        // TODO: iterate class fields and add them to the where clause if not null
+
+        return query.toString();
     }
 
-    public static void read(Object object) {
-        performCRUDOperation(2, object);
+    public static SessionFactory getSf() {
+        return new Configuration()
+                .addPackage("java.hibernate.entities")
+                .addAnnotatedClass(Currency.class)
+                .addAnnotatedClass(Users.class)
+                .addAnnotatedClass(UserType.class)
+                .addAnnotatedClass(Transactions.class)
+                .configure()
+                .buildSessionFactory();
     }
 
-    public static void update(Object object) {
-        performCRUDOperation(3, object);
+    public static Object create(Object object) {
+        return performCRUDOperation(1, object);
     }
 
-    public static void delete(Object object) {
-        performCRUDOperation(4, object);
+    public static Object read(Object object) {
+        return performCRUDOperation(2, object);
+    }
+
+    public static Object update(Object object) {
+        return performCRUDOperation(3, object);
+    }
+
+    public static Object delete(Object object) {
+        return performCRUDOperation(4, object);
     }
 }

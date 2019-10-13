@@ -1,24 +1,20 @@
-import hibernate.MyCRUD;
+import hibernate.entities.Currency;
 import hibernate.entities.UserType;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
-import java.io.IOException;
-import java.util.HashSet;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.List;
+
+import static hibernate.MyCRUD.getSf;
 
 public class test {
-    public static void main(String[] args) throws IOException {
-        String[] userTypes = new String[]{"Djudette", "Djud", "DZiwnyTyp"};
-        UserType ut;
-        HashSet<UserType> utList = new HashSet<>();
-        int id = 0;
-
-        for(String s : userTypes){
-            ut = new UserType();
-            ut.setTypeName(s);
-            utList.add(ut);
-        }
-
-        for(UserType i : utList) {
-            MyCRUD.read(i);
+    private static Session session;
+    public static void main(String[] args) {
+        Field[] methods = Currency.class.getDeclaredFields();
+        for(Field m : methods) {
+            System.out.println(m.getName()+ " " + test.class.getName());
         }
     }
 }

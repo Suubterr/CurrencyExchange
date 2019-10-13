@@ -3,26 +3,23 @@ package hibernate.entities;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "currency")
-public class Currency {
+public class Currency implements Serializable {
 
     @Id
     @Column(name = "currency_id")
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
-    private int currentyId;
+    private int currencyId;
 
     @Column(name = "short_name")
     private String shortName;
 
     @Column(name = "long_name")
     private String longName;
-
-    public int getCurrentyId() {
-        return currentyId;
-    }
 
     @Column(name = "country")
     private String country;
@@ -33,8 +30,12 @@ public class Currency {
     @Column(name = "buy")
     private float buy;
 
-    public void setCurrentyId(int currentyId) {
-        this.currentyId = currentyId;
+    public int getCurrencyId() {
+        return currencyId;
+    }
+
+    public void setCurrencyId(int currentyId) {
+        this.currencyId = currentyId;
     }
 
     public String getShortName() {
@@ -76,4 +77,5 @@ public class Currency {
     public void setBuy(float buy) {
         this.buy = buy;
     }
+
 }
