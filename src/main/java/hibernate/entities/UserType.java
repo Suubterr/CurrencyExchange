@@ -1,13 +1,16 @@
 package hibernate.entities;
 
+import hibernate.MyCRUD;
+import hibernate.Tools;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 
 @Entity
 @Table(name = "user_types")
-public class UserType implements Serializable {
+public class UserType implements Serializable, MyEntity{
 
     @Id
     @Column(name = "usrtype_id")
@@ -40,5 +43,12 @@ public class UserType implements Serializable {
                 "usrTypeId=" + usrTypeId +
                 ", typeName='" + typeName + '\'' +
                 '}';
+    }
+
+    public String getWhere(MyEntity object) {
+
+        StringBuffer query = new StringBuffer();
+
+        return query.toString();
     }
 }
